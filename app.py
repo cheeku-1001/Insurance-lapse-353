@@ -1,14 +1,12 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import pickle
+import joblib
 import os
 
-# --- Load Models ---
 @st.cache_resource
 def load_model(model_path):
-    with open(model_path, 'rb') as f:
-        data = pickle.load(f)
+    data = joblib.load(model_path)
     return data
 
 logistic_model_data = load_model('logistic_lapse_model.pkl')
