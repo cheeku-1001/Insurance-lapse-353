@@ -1,0 +1,33 @@
+import os
+import pickle
+
+filepath = '/content/logistic_lapse_model (1).pkl'
+
+print(f"--- Inspecting {filepath} ---")
+
+if os.path.exists(filepath):
+    file_size = os.path.getsize(filepath)
+    print(f"File '{filepath}' exists. Size: {file_size / 1024:.2f} KB")
+
+    if file_size == 0:
+        print("WARNING: File is empty.")
+    else:
+        try:
+            with open(filepath, 'rb') as f:
+                data = pickle.load(f)
+            print(f"Successfully loaded file. Type: {type(data)}")
+            if isinstance(data, dict):
+                print(f"Contents (keys): {list(data.keys())}")
+                for key, value in data.items():
+                    print(f"  Key '{key}': Type = {type(value)}")
+                    if key == 'columns' and isinstance(value, list):
+                        print(f"    Number of columns: {len(value)}")
+                        print(f"    Sample columns: {value[:5]}...")
+            else:
+                print("Loaded data is not a dictionary. Displaying head (if applicable):\n", str(data)[:200]) # Display first 200 chars if not a dict
+        except EOFError:
+            print("ERROR: EOFError - Ran out of input. The file might be corrupted or incomplete.")
+        except Exception as e:
+            print(f"ERROR loading or inspecting pickle file: {e}")
+else:
+    print(f"File '{filepath}' does NOT exist.")
